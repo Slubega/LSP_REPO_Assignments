@@ -29,7 +29,7 @@ The program follows a simple ETL pipeline:
      - ≤ $10 → Low  
      - ≤ $100 → Medium  
      - ≤ $500 → High  
-     - > $500 → Premium  
+     - \> $500 → Premium  
 
 3. **Load**  
    - Writes transformed data to `data/transformed_products.csv`.  
@@ -45,39 +45,40 @@ From the **repo root**, run:
 cd Assignment2
 javac -d out src\org\howard\edu\lsp\assignment2\ETLPipeline.java
 java -cp out org.howard.edu.lsp.assignment2.ETLPipeline
-
+```
 ## Project Layout
+```
 Assignment2/
 ├─ data/
 │  ├─ products.csv              # Input
 │  └─ transformed_products.csv  # Output
 └─ src/
    └─ org/howard/edu/lsp/assignment2/ETLPipeline.java
-
+```
 ## Example
 
 Input (products.csv):
-
+```
 ProductID,Name,Price,Category
 1,Book,12.99,Education
 2,Laptop,999.99,Electronics
 3,Notebook,2.49,Stationery
-
+```
 Output (transformed_products.csv):
-
+```
 ProductID,Name,Price,Category,PriceRange
 1,BOOK,12.99,Education,Medium
 2,LAPTOP,899.99,Premium Electronics,Premium
 3,NOTEBOOK,2.49,Stationery,Low
-
+```
 ## AI Usage
 
 I used ChatGPT to clarify assignment requirements, design the folder structure, and generate starter code for the ETL pipeline. Prompt example: “write a java ETL program that reads products.csv, transforms names, discounts electronics, recategorizes premium electronics, and assigns price ranges.” AI Response excerpt:
-
+```
 if (p.price.compareTo(new BigDecimal("500.00")) > 0
     && p.originalCategory.equalsIgnoreCase("Electronics")) {
     p.category = "Premium Electronics";
 }
-
+```
 
 I integrated the suggested logic into my final program, tested with the provided CSV cases, and modified parts (like error handling and summary output) to meet assignment specifications.
