@@ -1,3 +1,4 @@
+Assignment 2 — ETL Pipeline
 This project implements an Extract–Transform–Load (ETL) pipeline in Java. The program reads product data from data/products.csv, applies a series of transformations, and writes the results to data/transformed_products.csv. It was developed for Howard University Large Scale Programming, Fall 2025.
 
 Assumptions
