@@ -1,0 +1,15 @@
+ProductID,Name,Price,Category
+1,Book,12.99,Education
+2,Laptop,999.99,Electronics
+3,Notebook,2.49,Stationery
+4,Headphones,199.99,Electronics
+5,Pencil,0.99,Stationery
+6,Smartphone,699.49,Electronics
+7,Basketball,24.99,Sports
+8,Tablet,349.99,Electronics
+9,Water Bottle,8.5,Household
+10,Camera,1200,Electronics
+11,Backpack,45,Education
+12,Desk Lamp,32.75,Furniture
+13,Running Shoes,89.95,Sports
+14,Microwave,129.99,Appliances

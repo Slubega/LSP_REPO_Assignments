@@ -1,0 +1,8 @@
+# Build outputs
+Assignment1/out/
+Assignment2/out/
+*.class
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
