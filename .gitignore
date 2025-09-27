@@ -6,3 +6,4 @@ Assignment2/out/
 # OS & editor junk
 .DS_Store
 Thumbs.db
+.vscode/
