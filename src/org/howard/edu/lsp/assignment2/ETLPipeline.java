@@ -100,7 +100,7 @@ public class ETLPipeline {
             return;
         }
 
-        // 2) Transform  (order matters)
+        // (2) Transform  (order matters)
         // (1) uppercase name → (2) discount if Electronics → (3) recategorize → (4) price range from FINAL price
         for (Product p : products) {
             // (1) UPPERCASE name
