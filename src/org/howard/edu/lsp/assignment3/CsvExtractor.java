@@ -41,7 +41,7 @@ public class CsvExtractor {
                     BigDecimal price = new BigDecimal(parts[2].trim());
                     String category = parts[3].trim();
                     products.add(new Product(id, name, price, category));
-                } catch (Exception e) { rowsSkipped++; }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException parseEx) { rowsSkipped++; }
             }
         }
         return new Result(products, rowsRead, rowsSkipped, false);
