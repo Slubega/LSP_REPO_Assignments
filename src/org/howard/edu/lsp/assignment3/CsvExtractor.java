@@ -3,58 +3,103 @@ package org.howard.edu.lsp.assignment3;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Reads products from data/products.csv using a relative path (A2 rule). */
+/**
+ * Extract step that reads products from a CSV file using a relative path.
+ * Malformed rows are skipped and counted. Header-only files are supported.
+ */
 public class CsvExtractor {
     private final Path inputPath;
 
-    public CsvExtractor(Path inputPath) {
+    /**
+     * Creates a new extractor.
+     *
+     * @param inputPath path to the input CSV (for example, data/products.csv)
+     */
+    public CsvExtractor(final Path inputPath) {
         this.inputPath = inputPath;
     }
 
-    /** Returns products and counts [rowsRead, rowsSkipped]. Always tolerates empty/malformed rows. */
+    /**
+     * Reads and parses rows from the input CSV file into Product objects.
+     *
+     * Behavior:
+     * 1. If the file is missing, throws NoSuchFileException.
+     * 2. If the file contains only a header, returns a Result with headerOnly=true and no products.
+     * 3. Malformed rows are skipped and counted in rowsSkipped.
+     *
+     * @return a Result containing:
+     * - products: the successfully parsed products
+     * - rowsRead: number of data rows read from the file
+     * - rowsSkipped: number of malformed rows
+     * - headerOnly: whether the file contained only the header row
+     * @throws IOException if the file cannot be read
+     */
     public Result extract() throws IOException {
-        int rowsRead = 0, rowsSkipped = 0;
-        List<Product> products = new ArrayList<>();
-
         if (!Files.exists(inputPath)) {
-            // caller handles error/summary printing; we just signal missing file
-            throw new NoSuchFileException("Missing input file: " + inputPath);
+            throw new NoSuchFileException(inputPath.toString());
         }
+
+        List<Product> products = new ArrayList<>();
+        int rowsRead = 0;
+        int rowsSkipped = 0;
 
         try (BufferedReader br = Files.newBufferedReader(inputPath)) {
             String header = br.readLine();
-            if (header == null) {
+            if (header == null) { // empty file (no header)
                 return new Result(products, rowsRead, rowsSkipped, true);
             }
+
             String line;
             while ((line = br.readLine()) != null) {
                 rowsRead++;
                 String[] parts = line.split(",", -1);
                 if (parts.length != 4) { rowsSkipped++; continue; }
+
                 try {
                     int id = Integer.parseInt(parts[0].trim());
                     String name = parts[1].trim();
                     BigDecimal price = new BigDecimal(parts[2].trim());
                     String category = parts[3].trim();
                     products.add(new Product(id, name, price, category));
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException parseEx) { rowsSkipped++; }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+                    rowsSkipped++;
+                }
             }
         }
-        return new Result(products, rowsRead, rowsSkipped, false);
+
+        boolean headerOnly = (rowsRead == 0);
+        return new Result(products, rowsRead, rowsSkipped, headerOnly);
     }
 
-    /** Simple tuple for extractor result. */
+    /**
+     * Result of extraction containing products and counters.
+     */
     public static class Result {
+        /** Parsed products. */
         public final List<Product> products;
+        /** Number of data rows read (excludes header). */
         public final int rowsRead;
+        /** Number of rows skipped due to malformed input. */
         public final int rowsSkipped;
+        /** True if the file contained only a header row. */
         public final boolean headerOnly;
 
-        public Result(List<Product> products, int rowsRead, int rowsSkipped, boolean headerOnly) {
+        /**
+         * Constructs a result record.
+         *
+         * @param products    parsed products
+         * @param rowsRead    number of data rows read
+         * @param rowsSkipped number of rows skipped as malformed
+         * @param headerOnly  whether the file had only a header row
+         */
+        public Result(final List<Product> products, final int rowsRead,
+                      final int rowsSkipped, final boolean headerOnly) {
             this.products = products;
             this.rowsRead = rowsRead;
             this.rowsSkipped = rowsSkipped;

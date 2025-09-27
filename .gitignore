@@ -1,6 +1,5 @@
 # Build outputs
-Assignment1/out/
-Assignment2/out/
+out/
 *.class
 
 # OS & editor junk
