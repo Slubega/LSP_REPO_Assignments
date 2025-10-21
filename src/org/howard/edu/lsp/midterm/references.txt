@@ -1,0 +1,114 @@
+AI Usage references document
+Q2 (AreaCalculator)
+
+User: Running from inside src with java -cp src ... gives “Could not find or load main class”; what are the exact compile to out and run commands from the repo root?
+ChatGPT:
+Use a clean build to out/, then run from there:
+
+mkdir out 2>$null
+javac -d out src\org\howard\edu\lsp\midterm\question2\*.java
+java -cp out org.howard.edu.lsp.midterm.question2.Main
+
+
+This avoids stale classes under src and ensures the package maps to folders correctly.
+
+User: VS Code still shows “wrong package” even though the package line is correct—how do I mark src as a Java source folder so the squiggle disappears?
+ChatGPT:
+Command Palette → Java: Configure Java Project → add src. Or add:
+
+// .vscode/settings.json
+{ "java.project.sourcePaths": ["src"] }
+
+
+Reload the window; the warning will clear.
+
+User: I’m still getting “Main method not found in class Main” after moving files—how do I clean out stale .class files and run with the correct -cp out from repo root?
+ChatGPT:
+Purge old bytecode and rebuild:
+
+Get-ChildItem -Recurse -Filter *.class | Remove-Item -Force
+javac -d out src\org\howard\edu\lsp\midterm\question2\*.java
+java -cp out org.howard.edu.lsp.midterm.question2.Main
+
+
+Optionally confirm with javap -classpath out org.howard.edu.lsp.midterm.question2.Main.
+
+User: My Windows console shows ? instead of →; what’s the simplest grader-safe fix—switch to ASCII -> or force UTF-8 with a JVM flag?
+ChatGPT:
+Switch to ASCII -> for maximum portability. Forcing UTF-8 (chcp 65001 and -Dfile.encoding=UTF-8) works but isn’t guaranteed on the grader’s machine.
+
+Q4 (Devices)
+
+User: I put Networked/BatteryPowered in a different package and imports broke—what package statement should all Q4 files use to compile together?
+ChatGPT:
+Every file begins with:
+
+package org.howard.edu.lsp.midterm.question4;
+
+
+And lives under src/org/howard/edu/lsp/midterm/question4/.
+
+User: Compiler error: “class DoorLock is public, should be declared in a file named DoorLock.java”—I named the file differently; what’s the exact rule for matching public class names to filenames?
+ChatGPT:
+Public class name must exactly match the filename (case-sensitive): DoorLock → DoorLock.java, Thermostat → Thermostat.java, etc.
+
+User: Compilation error: “no default constructor in Device”—where exactly do I call super(id, location) in each subclass constructor?
+ChatGPT:
+As the first statement of each subclass constructor:
+
+public Camera(String id, String location, int initialBattery) {
+  super(id, location);
+  setBatteryPercent(initialBattery);
+}
+
+
+User: setBatteryPercent(101) doesn’t throw in my code—what’s the exact 0..100 check and exception message I should use?
+ChatGPT:
+Enforce inclusive bounds and throw:
+
+if (percent < 0 || percent > 100) {
+  throw new IllegalArgumentException("battery 0..100");
+}
+this.batteryPercent = percent;
+
+
+User: I trigger the invalid-battery exception with a temporary badCam variable and get “unused variable”—what’s the clean way to provoke the exception without that warning?
+ChatGPT:
+Construct inside the try without binding:
+
+try {
+  new Camera("CA-404","Test-Lab",-5);
+  System.out.println("ERROR: Exception was not thrown");
+} catch (IllegalArgumentException e) {
+  System.out.println("Caught expected: " + e.getMessage());
+}
+
+
+User: I set a local connected boolean in DoorLock; now isConnected() (from Device) disagrees—how should I update connection state correctly?
+ChatGPT:
+Don’t shadow state—use the base class:
+
+@Override public void connect()    { setConnected(true); }
+@Override public void disconnect() { setConnected(false); }
+@Override public boolean isConnected() { return super.isConnected(); }
+
+
+User: DoorLock.getStatus() prints conn=up but Camera.getStatus() prints conn=UP; the autograder fails exact match—what’s the canonical format?
+ChatGPT:
+Use a single, consistent format (lower-case up/down, same labels/order):
+
+DoorLock[id=..., loc=..., conn=up, batt=85%]
+Thermostat[id=..., loc=..., conn=up, tempC=21.5]
+Camera[id=..., loc=..., conn=down, batt=72%]
+
+
+User: I cast every Device to BatteryPowered in the report loop and hit ClassCastException—what’s the proper instanceof guard pattern here?
+ChatGPT:
+Guard, then cast:
+
+for (Device d : devices) {
+  if (d instanceof BatteryPowered) {
+    BatteryPowered bp = (BatteryPowered) d;
+    System.out.println(bp.getBatteryPercent() + "%");
+  }
+}
