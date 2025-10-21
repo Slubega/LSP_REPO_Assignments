@@ -1,0 +1,68 @@
+Midterm – Question 2 (AreaCalculator)
+References & AI-use disclosure
+--------------------------------
+
+Primary Java references
+1) Oracle Java Tutorials — “Defining Methods (Overloading)”
+   https://docs.oracle.com/javase/tutorial/java/javaOO/methods.html#overloading
+   (Accessed: Oct 20, 2025)
+
+2) Java SE API — java.lang.Math (use of Math.PI)
+   https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
+   (Accessed: Oct 20, 2025)
+
+3) Java SE API — java.lang.IllegalArgumentException
+   https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html
+   (Accessed: Oct 20, 2025)
+
+4) Oracle Java Tutorials — “Catch and Handle Exceptions (try/catch)”
+   https://docs.oracle.com/javase/tutorial/essential/exceptions/handling.html
+   (Accessed: Oct 20, 2025)
+
+5) Java SE API — java.lang.System (System.out printing)
+   https://docs.oracle.com/javase/8/docs/api/java/lang/System.html
+   (Accessed: Oct 20, 2025)
+
+Brief implementation notes
+- Overloading used a single method name `area` with distinct parameter lists:
+  (double), (double,double), (int,int), and (int).
+- Formulas: circle πr^2; rectangle w×h; triangle ½×base×height; square side^2.
+- Each method validates inputs (> 0) and throws IllegalArgumentException on bad values.
+- Main prints the four required lines and demonstrates an exception via try/catch.
+
+Build/run (repro)
+- Compile:  javac -d out src/org/howard/edu/lsp/midterm/question2/*.java
+- Run:      java -cp out org.howard.edu.lsp.midterm.question2.Main
+
+AI-use disclosure
+- I used ChatGPT (GPT-5 Thinking) for help structuring the package, writing/cleaning
+  the AreaCalculator/Main skeleton, and fixing compile/run commands.
+
+Prompt:
+“Where should I put my files for package org.howard.edu.lsp.midterm.question2;? VS Code says wrong package.”
+
+Response (excerpt):
+“Create this path exactly:
+src/org/howard/edu/lsp/midterm/question2/
+Put AreaCalculator.java and Main.java there. In VS Code, mark src as a source folder 
+(Java: Configure Java Project → Add Folder to Java Source Path). Both files must start with:
+package org.howard.edu.lsp.midterm.question2;
+
+Prompt:
+“VS Code still shows ‘wrong package’. How do I fix the Java source path?”
+
+Response (excerpt):
+“Open the command palette → Java: Configure Java Project → Add src to Java Source Paths. Or add .vscode/settings.json:
+
+{ "java.project.sourcePaths": ["src"] }
+
+Prompt:
+“What are the exact javac/java commands from the repo root? I want classes in an out folder.”
+
+Response (excerpt):
+
+cd "C:\Path\To\LSP_REPO_Assignments"
+mkdir out 2>$null
+javac -d out src\org\howard\edu\lsp\midterm\question2\*.java
+java -cp out org.howard.edu.lsp.midterm.question2.Main
+
